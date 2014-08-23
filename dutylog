@@ -3,3 +3,6 @@
 21.07.2014 16:44        asa5515-1.domain.name    Jul 21 16:44:32 GST: %ASA-session-6-305012: Teardown dynamic TCP translation from inside:172.00.04.133/52905 to outside:37.00.02.103/51436 duration 0:04:36
 21.07.2014 16:44        asa5515-1.domain.name    Jul 21 16:44:33 GST: %ASA-session-6-302013: Built outbound TCP connection 129045453 for outside:64.00.01.188/443 (64.00.01.188/443) to inside-guest:172.00.08.53/55931 (guest-PAT/55931)
 21.07.2014 16:44        asa5515-1.domain.name    Jul 21 16:44:35 GST: %ASA-session-5-304001: 172.00.04.203 Accessed URL 217.00.01.148:http://top-fwz1.mail.ru/tracker?js=13;id=87520;e=RT/unload;sid=cf80497e;ids=87520;ver=60;_=0.25877381587834797
+21.07.2014 16:44        asa5515-1.domain.name    Jul 21 16:44:32 GST: %ASA-config-5-111010: User 'username', running 'CLI' from IP 172.00.00.124, executed 'logging host inside 172.19.0.225 format emblem'
+21.07.2014 16:44        asa5515-1.domain.name    Jul 21 16:44:32 GST: %ASA-config-5-111010: User 'username' running 'CLI' from IP 172.00.00.124, executed 'logging host inside 172.19.0.225 format emblem'
+
