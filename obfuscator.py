@@ -33,13 +33,17 @@ def parse(filename):
 
 def obfuscate(parsed_file):
     """
+    This function changes unsecured words in the log file (IP addresses, user names) and returns obfuscated file.
+    Variable parsed_file must be obtained by the function parse()
+    Return is a list at the same format as the input parsed_file variable.
+    :type parsed_file: list
 
     """
     users = {}
     ips = {}
     for line in seq_iter(parsed_file):
         assert isinstance(line, int)
-        # Change User field
+        # Changing User fields
         regexp = re.compile(r"(User '.*')")
         username = regexp.search(parsed_file[line][2])
         if username and username.group():
@@ -49,7 +53,7 @@ def obfuscate(parsed_file):
             parsed_file[line] = [parsed_file[line][0], parsed_file[line][1],
                                  re.sub(r"User '([a-z]+)'", "User '" + users[name] + "'", parsed_file[line][2])]
 
-        # Change IP address
+        # Changing IP addresses
         r = r'((([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])[ (\[]?(\.|dot)' \
             r'[ )\]]?){3}([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))[,| |/]'
         regexp = re.compile(r)
@@ -62,11 +66,11 @@ def obfuscate(parsed_file):
                         random.randint(0, 255))
                 parsed_file[line] = [parsed_file[line][0], parsed_file[line][1],
                                      re.sub(ad, ips[ad], parsed_file[line][2])]
-        # Change anything else
+        # Changing anything else
 
     return parsed_file
 
 
 if __name__ == "__main__":
     for line in obfuscate(parse(FILENAME)):
-        print line[2]
+        print line[0], line[1], line[2]
