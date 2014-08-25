@@ -6,71 +6,71 @@ __author__ = 'Pavel Lazarenko'
 
 FILENAME = 'dutylog'
 
-
-def seq_iter(obj):
-    return obj if isinstance(obj, dict) else xrange(len(obj))
+username = re.compile(r"User '(.*?)'")
+ipaddr = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
 
 
 def parse(filename):
     """
-    Function for parsing rsyslog files for the next processing
-    :param filename:
-    :return: list
+    Function for parsing rsyslog files for future processing
 
+    :param filename:
+    :return: iterator over (date, host, message) tuples
     """
     assert isinstance(filename, str)
-    f = open(filename)
-    parsed_file = []
-    for line in f.readlines():
-        parsed_line = []
-        for field in line.split('  '):
-            if field:
-                parsed_line.append(field)
-        if len(parsed_line) == 3:
-            parsed_file.append(parsed_line)
-    return parsed_file
+    with open(filename) as f:
+        for line in f:
+            try:
+                fields = line.split(maxsplit=3)
+                date = ' '.join(fields[:2])
+                host = fields[2]
+                message = fields[3].strip()
+                yield date, host, message
+            except IndexError:
+                continue
 
 
-def obfuscate(parsed_file):
+def random_ip():
+    return '.'.join((str(random.randint(0, 255)) for x in range(4)))
+
+
+def obfuscate(filename):
     """
-    This function changes unsecured words in the log file (IP addresses, user names) and returns obfuscated file.
-    Variable parsed_file must be obtained by the function parse()
-    Return is a list at the same format as the input parsed_file variable.
-    :type parsed_file: list
+    This function reads a file line by line and changes unsecured words
+    (IP addresses, user names) to some random shit.
 
+    :param filename: name of log file to process
+    :type filename: str
+    :return: iterator over obfuscated lines
     """
     users = {}
     ips = {}
-    for line in seq_iter(parsed_file):
-        assert isinstance(line, int)
+    for date, host, message in parse(filename):
         # Changing User fields
-        regexp = re.compile(r"(User '.*')")
-        username = regexp.search(parsed_file[line][2])
-        if username and username.group():
-            name = username.group().split("User ")[1].strip("'").split("'")[0]
-            if name not in users:
-                users[name] = ''.join(random.choice(string.lowercase) for i in range(8))
-            parsed_file[line] = [parsed_file[line][0], parsed_file[line][1],
-                                 re.sub(r"User '([a-z]+)'", "User '" + users[name] + "'", parsed_file[line][2])]
+        for name in username.findall(message):
+            try:
+                message = message.replace("User '%s'" % name, "User '%s'" % users[name])
+            except KeyError:
+                try:
+                    # python 2
+                    users[name] = ''.join(random.choice(string.lowercase) for i in range(8))
+                except AttributeError:
+                    # python 3
+                    users[name] = ''.join(random.choice(string.ascii_lowercase) for i in range(8))
+                message = message.replace("User '%s'" % name, "User '%s'" % users[name])
 
         # Changing IP addresses
-        r = r'((([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])[ (\[]?(\.|dot)' \
-            r'[ )\]]?){3}([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))[,| |/]'
-        regexp = re.compile(r)
-        ip = regexp.findall(parsed_file[line][2])
-        if ip:
-            for addr in ip:
-                ad = addr[0]
-                if ad not in ips:
-                    ips[ad] = ad.split('.')[0] + '.' + ad.split('.')[1] + '.' + str(random.randint(0, 255)) + '.' + str(
-                        random.randint(0, 255))
-                parsed_file[line] = [parsed_file[line][0], parsed_file[line][1],
-                                     re.sub(ad, ips[ad], parsed_file[line][2])]
+        for ip in ipaddr.findall(message):
+            try:
+                message = message.replace(ip, ips[ip])
+            except KeyError:
+                ips[ip] = random_ip()
+                message = message.replace(ip, ips[ip])
         # Changing anything else
 
-    return parsed_file
+        yield date, host, message
 
 
 if __name__ == "__main__":
-    for line in obfuscate(parse(FILENAME)):
-        print line[0], line[1], line[2]
+    for date, host, message in obfuscate(FILENAME):
+        print(date, host, message)
