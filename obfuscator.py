@@ -7,7 +7,7 @@ __author__ = 'Pavel Lazarenko'
 FILENAME = 'dutylog'
 
 username = re.compile(r"User '(.*?)'")
-ipaddr = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+ipaddr_middle = re.compile(r'(\.\d{1,3}\.\d{1,3}\.)')
 
 
 def parse(filename):
@@ -21,7 +21,7 @@ def parse(filename):
     with open(filename) as f:
         for line in f:
             try:
-                fields = line.split(maxsplit=3)
+                fields = line.split(None, 3)
                 date = ' '.join(fields[:2])
                 host = fields[2]
                 message = fields[3].strip()
@@ -30,8 +30,8 @@ def parse(filename):
                 continue
 
 
-def random_ip():
-    return '.'.join((str(random.randint(0, 255)) for x in range(4)))
+def random_ip_middle():
+    return '.%d.%d.' % (random.randint(0, 255), random.randint(0, 255))
 
 
 def obfuscate(filename):
@@ -60,11 +60,11 @@ def obfuscate(filename):
                 message = message.replace("User '%s'" % name, "User '%s'" % users[name])
 
         # Changing IP addresses
-        for ip in ipaddr.findall(message):
+        for ip in ipaddr_middle.findall(message):
             try:
                 message = message.replace(ip, ips[ip])
             except KeyError:
-                ips[ip] = random_ip()
+                ips[ip] = random_ip_middle()
                 message = message.replace(ip, ips[ip])
         # Changing anything else
 
