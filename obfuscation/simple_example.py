@@ -193,6 +193,14 @@ def obfuscate(filename):
         # по одной обработанной строке за раз.
         yield date, host, message
 
+
+def main():
+    # Вызываем функцию-генератор obfuscate
+    for date, host, message in obfuscate(DEFAULT_FILENAME):
+        # и просто раз за разом печатаем то, что она возвращает
+        print(date, host, message)
+    return 0
+
 # Эта конструкция является правилом хорошего тона при создании скриптов python.
 # У каждого запускаемого модуля есть атрибут __name__ (черт его побери! в питоне
 # даже сама программа это тоже объект! объектно-ориентированный до мозга костей)
@@ -205,8 +213,4 @@ def obfuscate(filename):
 if __name__ == "__main__":
     # Таким образом этот блок будет выполнен только в том случае, если
     # этот файл непосредственно запущен на выполнение.
-
-    # Вызываем функцию-генератор obfuscate
-    for date, host, message in obfuscate(DEFAULT_FILENAME):
-        # и просто раз за разом печатаем то, что она возвращает
-        print(date, host, message)
+    sys.exit(main())
