@@ -45,6 +45,6 @@ class Reader(threading.Thread):
                 # когда очередь достигла максимального размера.
                 # В такое комбинации эта thread будет приостановлена до тех пор,
                 # пока в очереди не появится место.
-                self.queue.put((index, line.rstrip()), block=True, timeout=None)
+                self.queue.put((index, line), block=True, timeout=None)
 
         log.debug('Reader finished.')
