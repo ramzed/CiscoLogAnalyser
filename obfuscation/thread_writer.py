@@ -10,9 +10,17 @@ Thread-класс, выполняющий следующие функции:
 
 #TODO: реализовать блочную запись на диск
 
-from stoppable_loop import StoppableLoop
-from Queue import Empty
-from log import log
+from __future__ import absolute_import
+
+try:
+    # python 2
+    from Queue import Empty
+except ImportError:
+    # python 3
+    from queue import Empty
+
+from obfuscation.stoppable_loop import StoppableLoop
+from obfuscation.log import log
 
 
 class Writer(StoppableLoop):

@@ -1,5 +1,4 @@
-__author__ = 'Mr.Spiridonov'
+from __future__ import absolute_import
 
-
-from multiproc_way import MultiObfuscater
-from log import log, set_log_file
+from obfuscation.multiproc_way import MultiObfuscater
+from obfuscation.log import log, set_log_file

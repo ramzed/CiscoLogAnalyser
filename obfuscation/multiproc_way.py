@@ -3,6 +3,7 @@
 """
 Разнес все по отдельным файлам, стало веселее.
 """
+from __future__ import absolute_import
 
 import os
 import sys
@@ -15,12 +16,11 @@ except ImportError:
     # python 3
     from queue import Empty
 
-
-from log import log
-from thread_reader import Reader
-from thread_writer import Writer
-from thread_coordinator import Coordinator
-from thread_manager import Manager
+from obfuscation.log import log
+from obfuscation.thread_reader import Reader
+from obfuscation.thread_writer import Writer
+from obfuscation.thread_coordinator import Coordinator
+from obfuscation.thread_manager import Manager
 
 ######################### Проверка окружения ###################################
 # Данная версия скрипта взлетит только в Linux-системах.

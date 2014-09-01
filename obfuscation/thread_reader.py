@@ -8,8 +8,10 @@ Thread-класс, выполняющий следующие функции:
 
 #TODO: Добавить возможность фильтрации строк перед тем как они попадут в систему
 
+from __future__ import absolute_import
+
 import threading
-from log import log
+from obfuscation.log import log
 
 
 class Reader(threading.Thread):

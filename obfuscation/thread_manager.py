@@ -6,12 +6,13 @@ Thread-класс, выполняющий следующие функции:
 3. Запуска рабочих
 4. Получение результатов и размещение их в очередь результатов
 """
+from __future__ import absolute_import
 
 import threading
 import multiprocessing as mp
 
-from log import log
-from process_worker import Worker
+from obfuscation.log import log
+from obfuscation.process_worker import Worker
 
 
 class Manager(threading.Thread):

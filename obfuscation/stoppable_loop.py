@@ -3,9 +3,10 @@
 Thread-класс, выполняющий бесконечный цикл, до тех пор пока его
 не остановят командой извне.
 """
+from __future__ import absolute_import
 
 import threading
-from log import log
+from obfuscation.log import log
 
 
 class StoppableLoop(threading.Thread):

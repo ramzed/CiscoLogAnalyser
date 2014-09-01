@@ -11,11 +11,13 @@ Thread-класс, выполняющий следующие функции:
 
 #TODO: определить API, по которому рабочие смогут обращаться в конкретный словарь
 
+from __future__ import absolute_import
+
 import socket
 import random
 
-from stoppable_loop import StoppableLoop
-from log import log
+from obfuscation.stoppable_loop import StoppableLoop
+from obfuscation.log import log
 
 
 class Coordinator(StoppableLoop):
