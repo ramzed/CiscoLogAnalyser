@@ -28,7 +28,12 @@ class Worker:
             except KeyError:
                 sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 sock.connect(self.coordinator)
-                sock.send(bytes(name, 'utf-8'))
+                try:
+                    # python 2
+                    sock.send(name)
+                except TypeError:
+                    # python 3
+                    sock.send(bytes(name, 'utf-8'))
                 self.cache[name] = str(sock.recv(128))[2:-1]
                 sock.close()
                 line = line.replace("User '%s'" % name,
@@ -40,7 +45,12 @@ class Worker:
             except KeyError:
                 sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 sock.connect(self.coordinator)
-                sock.send(bytes(ip, 'utf-8'))
+                try:
+                    # python 2
+                    sock.send(ip)
+                except TypeError:
+                    # python 3
+                    sock.send(bytes(ip, 'utf-8'))
                 self.cache[ip] = str(sock.recv(128))[2:-1]
                 sock.close()
                 line = line.replace(ip, self.cache[ip])
